@@ -1,7 +1,25 @@
 'use client'
 
-import { Box, Button, Stack, TextField } from '@mui/material'
+import { Box, Button, Stack, TextField, ThemeProvider, createTheme} from '@mui/material'
 import { useState, useRef, useEffect } from 'react'
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#3a7bd5', // A modern blue
+    },
+    secondary: {
+      main: '#00d2ff', // A bright cyan
+    },
+    background: {
+      default: '#f0f2f5', // Light grey background
+    },
+  },
+  typography: {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontSize: 14,
+  },
+});
 
 export default function Home() {
   const [messages, setMessages] = useState([
@@ -83,6 +101,7 @@ export default function Home() {
   }, [messages])
 
   return (
+    <ThemeProvider theme={theme}>
     <Box
       width="100vw"
       height="100vh"
@@ -90,13 +109,18 @@ export default function Home() {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
+      bgcolor="background.default"
+    
     >
       <Stack
         direction={'column'}
-        width="500px"
-        height="700px"
-        border="1px solid black"
-        p={2}
+        width="90%"
+        maxWidth="900px"
+        height="90vh"
+        bgcolor="white"
+        borderRadius={4}
+        boxShadow={3}
+        p={3}
         spacing={3}
       >
         <Stack
@@ -105,6 +129,19 @@ export default function Home() {
           flexGrow={1}
           overflow="auto"
           maxHeight="100%"
+          sx={{
+            '&::-webkit-scrollbar': {
+              width: '0.4em',
+            },
+            '&::-webkit-scrollbar-track': {
+              boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+              webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: 'rgba(0,0,0,.1)',
+              borderRadius: '10px',
+            },
+          }}
         >
           {messages.map((message, index) => (
             <Box
@@ -121,8 +158,13 @@ export default function Home() {
                     : 'secondary.main'
                 }
                 color="white"
-                borderRadius={16}
-                p={3}
+                borderRadius={2}
+                p={2}
+                maxWidth="70%"
+                sx={{
+                  fontSize: '1rem',
+                  boxShadow: 1,
+                }}
               >
                 {message.content}
               </Box>
@@ -138,16 +180,29 @@ export default function Home() {
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             disabled={isLoading}
+            variant="outlined"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 2,
+              },
+            }}
           />
           <Button 
             variant="contained" 
             onClick={sendMessage}
             disabled={isLoading}
+            sx={{
+              borderRadius: 2,
+              textTransform: 'none',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+            }}
           >
             {isLoading ? 'Sending...' : 'Send'}
           </Button>
         </Stack>
       </Stack>
     </Box>
-  )
+  </ThemeProvider>
+)
 }
